@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Splash} from './pages';
+import {GetStarted, Splash} from './pages';
 
 function App() {
-  return <Splash />;
+  return <GetStarted />;
 }
 
 export default App;
