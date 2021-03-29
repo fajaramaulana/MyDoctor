@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {colors, fonts} from '../../../utils';
 
 const Link = ({title, size, align}) => {
   return (
@@ -14,9 +15,9 @@ export default Link;
 const styles = StyleSheet.create({
   text: (size, align) => ({
     fontSize: size,
-    color: '#7D8797',
+    color: colors.text.secondary,
     textDecorationLine: 'underline',
-    fontFamily: 'Nunito-Regular',
+    fontFamily: fonts.primary[400],
     textAlign: align,
   }),
 });
