@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   },
   rate: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   profile: {
     flex: 1,
