@@ -5,6 +5,7 @@ import {
   Chatting,
   ChooseDoctor,
   Doctor,
+  DoctorProfile,
   GetStarted,
   Hospitals,
   Login,
@@ -75,6 +76,11 @@ const Router = () => {
       <Stack.Screen
         name="UserProfile"
         component={UserProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DoctorProfile"
+        component={DoctorProfile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

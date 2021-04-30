@@ -3,10 +3,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Gap, Header, List, Profile} from '../../components';
 import {colors} from '../../utils';
 
-const UserProfile = () => {
+const UserProfile = ({navigation}) => {
   return (
     <View style={styles.page}>
-      <Header title="Profile" />
+      <Header title="Profile" onPress={() => navigation.goBack()} />
       <Gap height={10} />
       <Profile />
       <Gap height={14} />
