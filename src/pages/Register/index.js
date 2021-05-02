@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Button, Gap, Header, Input} from '../../components';
 import {colors, useForm} from '../../utils';
+import {Fire} from '../../config';
 
 const Register = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -13,6 +14,20 @@ const Register = ({navigation}) => {
 
   const onContinue = () => {
     console.log(form);
+    Fire.auth()
+      .createUserWithEmailAndPassword(form.email, form.password)
+      .then(success => {
+        // Signed in
+        // const user = userCredential.user;
+        console.log('register sukses', success);
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log('error register', errorMessage);
+        // ..
+      });
     // () => navigation.navigate('UploadPhoto')
   };
   return (
