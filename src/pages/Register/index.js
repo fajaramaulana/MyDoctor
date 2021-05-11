@@ -1,32 +1,55 @@
+/* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {Button, Gap, Header, Input, Loading} from '../../components';
 import {colors} from '../../utils';
 import {Fire} from '../../config';
+import * as yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 import {useForm, Controller} from 'react-hook-form';
+
+const validationSchema = yup.object({
+  fullName: yup
+    .string()
+    .required('Required!')
+    .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field '),
+  profession: yup
+    .string()
+    .required('Required!')
+    .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field ')
+    .length(10, 'Too short, minimum 5 character'),
+  email: yup.string().email('Email must be a valid email!'),
+  password: yup
+    .string()
+    .required('Required!')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+      'Minimum eight characters, at least one uppercase letter, one lowercase letter and one number',
+    ),
+  confPassword: yup
+    .string()
+    .required('Required!')
+    .oneOf([yup.ref('password'), null], 'Password do not match!'),
+});
 
 const Register = ({navigation}) => {
   const {
     control,
     handleSubmit,
     formState: {errors},
-  } = useForm();
-  const [fullName, setFullName] = useState('');
-  const [userName, setUsername] = useState('');
-  const [profession, setProfession] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState({});
+  } = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+  });
   const [loading, setLoading] = useState(false);
 
   const onContinue = async data => {
     try {
       console.log('data', data);
-      // () => navigation.navigate('UploadPhoto')
+      // () => navigation.navigate('UploadPhoto'
     } catch (e) {}
   };
-
-  console.log('error', errors);
   return (
     <>
       <View style={styles.page}>
@@ -36,15 +59,8 @@ const Register = ({navigation}) => {
             <Controller
               name={'fullName'}
               control={control}
-              rules={{
-                required: 'Required!',
-                minLength: {
-                  message: 'Use at least 5 characters.',
-                  value: 5,
-                },
-              }}
               defaultValue={''}
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({field: {onChange, value, onBlur}}) => (
                 <Input
                   label="Full Name"
                   onBlur={onBlur}
@@ -59,9 +75,6 @@ const Register = ({navigation}) => {
             <Controller
               name={'profession'}
               control={control}
-              rules={{
-                required: 'Required',
-              }}
               defaultValue={''}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
@@ -71,6 +84,55 @@ const Register = ({navigation}) => {
                   value={value}
                   placeholder="masukkan pekerjaan anda"
                   errorMessage={errors.profession?.message}
+                />
+              )}
+            />
+            <Gap height={10} />
+            <Controller
+              name={'email'}
+              control={control}
+              defaultValue={''}
+              render={({field: {onChange, onBlur, value}}) => (
+                <Input
+                  label="Email"
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="masukkan email anda"
+                  errorMessage={errors.email?.message}
+                />
+              )}
+            />
+            <Gap height={10} />
+            <Controller
+              name={'password'}
+              control={control}
+              defaultValue={''}
+              render={({field: {onChange, onBlur, value}}) => (
+                <Input
+                  label="Password"
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="masukkan password anda"
+                  errorMessage={errors.password?.message}
+                  secureTextEntry
+                />
+              )}
+            />
+            <Controller
+              name={'confPassword'}
+              control={control}
+              defaultValue={''}
+              render={({field: {onChange, onBlur, value}}) => (
+                <Input
+                  label="Confirm Password"
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="masukkan kembali password anda"
+                  errorMessage={errors.confPassword?.message}
+                  secureTextEntry
                 />
               )}
             />

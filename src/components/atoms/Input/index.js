@@ -11,6 +11,7 @@ const Input = ({
   placeholder,
   errorMessage,
   defaultValue,
+  onBlur,
 }) => {
   const [border, setBorder] = useState(colors.border);
   const onFocusForm = () => {
@@ -25,7 +26,7 @@ const Input = ({
       <TextInput
         defaultValue={defaultValue}
         onFocus={onFocusForm}
-        onBlur={onBlurForm}
+        onBlur={(onBlurForm, onBlur)}
         style={styles.input(border)}
         value={value}
         onChangeText={onChangeText}
