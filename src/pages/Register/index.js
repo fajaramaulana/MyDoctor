@@ -7,6 +7,7 @@ import {Fire} from '../../config';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useForm, Controller} from 'react-hook-form';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 const validationSchema = yup.object({
   fullName: yup
@@ -18,7 +19,10 @@ const validationSchema = yup.object({
     .required('Required!')
     .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field ')
     .min(5, 'Too short, minimum 5 character'),
-  email: yup.string().email('Email must be a valid email!'),
+  email: yup
+    .string()
+    .required('Required!')
+    .email('Email must be a valid email!'),
   password: yup
     .string()
     .required('Required!')
@@ -61,7 +65,12 @@ const Register = ({navigation}) => {
       .catch(error => {
         const errorMessage = error.message;
         setLoading(false);
-        console.log('error register: ', errorMessage);
+        showMessage({
+          message: errorMessage,
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
       });
   };
   return (
