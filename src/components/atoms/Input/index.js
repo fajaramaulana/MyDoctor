@@ -3,7 +3,15 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {colors, fonts} from '../../../utils';
 
-const Input = ({label, value, onChangeText, secureTextEntry}) => {
+const Input = ({
+  label,
+  value,
+  onChangeText,
+  secureTextEntry,
+  placeholder,
+  errorMessage,
+  defaultValue,
+}) => {
   const [border, setBorder] = useState(colors.border);
   const onFocusForm = () => {
     setBorder(colors.tertiary);
@@ -15,13 +23,16 @@ const Input = ({label, value, onChangeText, secureTextEntry}) => {
     <View>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        defaultValue={defaultValue}
         onFocus={onFocusForm}
         onBlur={onBlurForm}
         style={styles.input(border)}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
+        placeholder={placeholder}
       />
+      <Text style={styles.alerta}>{errorMessage}</Text>
     </View>
   );
 };
@@ -41,5 +52,8 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
     color: colors.text.secondary,
+  },
+  alerta: {
+    color: colors.text.alerta,
   },
 });

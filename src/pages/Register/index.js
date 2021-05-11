@@ -1,72 +1,81 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, Text} from 'react-native';
 import {Button, Gap, Header, Input, Loading} from '../../components';
-import {colors, useForm} from '../../utils';
+import {colors} from '../../utils';
 import {Fire} from '../../config';
+import {useForm, Controller} from 'react-hook-form';
 
 const Register = ({navigation}) => {
-  const [form, setForm] = useForm({
-    fullName: '',
-    profession: '',
-    email: '',
-    password: '',
-  });
-
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
+  const [fullName, setFullName] = useState('');
+  const [userName, setUsername] = useState('');
+  const [profession, setProfession] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const onContinue = () => {
-    console.log(form);
-    setLoading(true);
-    Fire.auth()
-      .createUserWithEmailAndPassword(form.email, form.password)
-      .then(success => {
-        // Signed in
-        // const user = userCredential.user;
-        setLoading(false);
-        console.log('register sukses', success);
-      })
-      .catch(error => {
-        const errorCode = error.code;
-        setLoading(false);
-        const errorMessage = error.message;
-
-        console.log('error register', errorMessage);
-        // ..
-      });
-    // () => navigation.navigate('UploadPhoto')
+  const onContinue = async data => {
+    try {
+      console.log('data', data);
+      // () => navigation.navigate('UploadPhoto')
+    } catch (e) {}
   };
+
+  console.log('error', errors);
   return (
     <>
       <View style={styles.page}>
         <Header onPress={() => navigation.goBack()} title="Daftar Akun" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            <Input
-              label="Full Name"
-              value={form.fullName}
-              onChangeText={value => setForm('fullName', value)}
+            <Controller
+              name={'fullName'}
+              control={control}
+              rules={{
+                required: 'Required!',
+                minLength: {
+                  message: 'Use at least 5 characters.',
+                  value: 5,
+                },
+              }}
+              defaultValue={''}
+              render={({field: {onChange, onBlur, value}}) => (
+                <Input
+                  label="Full Name"
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="masukkan nama anda"
+                  errorMessage={errors.fullName?.message}
+                />
+              )}
             />
-            <Gap height={24} />
-            <Input
-              label="Pekerjaan"
-              value={form.profession}
-              onChangeText={value => setForm('profession', value)}
+            <Gap height={10} />
+            <Controller
+              name={'profession'}
+              control={control}
+              rules={{
+                required: 'Required',
+              }}
+              defaultValue={''}
+              render={({field: {onChange, onBlur, value}}) => (
+                <Input
+                  label="Profession"
+                  onBlur={onBlur}
+                  onChangeText={value => onChange(value)}
+                  value={value}
+                  placeholder="masukkan pekerjaan anda"
+                  errorMessage={errors.profession?.message}
+                />
+              )}
             />
-            <Gap height={24} />
-            <Input
-              label="Email Address"
-              value={form.email}
-              onChangeText={value => setForm('email', value)}
-            />
-            <Gap height={24} />
-            <Input
-              label="Password"
-              value={form.password}
-              onChangeText={value => setForm('password', value)}
-              secureTextEntry
-            />
-            <Gap height={40} />
-            <Button title="Continue" onPress={onContinue} />
+            <Gap height={26} />
+            <Button title="Continue" onPress={handleSubmit(onContinue)} />
           </View>
         </ScrollView>
       </View>
@@ -85,5 +94,8 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.white,
     flex: 1,
+  },
+  alerta: {
+    color: colors.text.alerta,
   },
 });

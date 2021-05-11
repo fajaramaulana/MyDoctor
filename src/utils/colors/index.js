@@ -10,6 +10,7 @@ const mainColor = {
   blue1: '#0066CB',
   black1: '#00000',
   black2: 'rgba(0,0,0, 0.5)',
+  red: 'red',
 };
 
 export const colors = {
@@ -26,6 +27,7 @@ export const colors = {
     menuInactive: mainColor.dark2,
     menuActive: mainColor.green1,
     subTitle: mainColor.dark3,
+    alerta: mainColor.red,
   },
   button: {
     primary: {
