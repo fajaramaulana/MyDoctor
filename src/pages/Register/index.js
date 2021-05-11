@@ -17,11 +17,12 @@ const validationSchema = yup.object({
     .string()
     .required('Required!')
     .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field ')
-    .length(10, 'Too short, minimum 5 character'),
+    .min(5, 'Too short, minimum 5 character'),
   email: yup.string().email('Email must be a valid email!'),
   password: yup
     .string()
     .required('Required!')
+    .min(8, 'Too short, minimum 8 character')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
       'Minimum eight characters, at least one uppercase letter, one lowercase letter and one number',
@@ -37,6 +38,7 @@ const Register = ({navigation}) => {
     control,
     handleSubmit,
     formState: {errors},
+    reset,
   } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -44,11 +46,23 @@ const Register = ({navigation}) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const onContinue = async data => {
-    try {
-      console.log('data', data);
-      // () => navigation.navigate('UploadPhoto'
-    } catch (e) {}
+  const onContinue = data => {
+    console.log(data);
+    setLoading(true);
+    Fire.auth()
+      .createUserWithEmailAndPassword(data.email, data.password)
+      .then(success => {
+        setLoading(false);
+        reset('', {
+          keepValues: false,
+        });
+        console.log('register success', success);
+      })
+      .catch(error => {
+        const errorMessage = error.message;
+        setLoading(false);
+        console.log('error register: ', errorMessage);
+      });
   };
   return (
     <>
