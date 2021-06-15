@@ -7,6 +7,8 @@ firebase.initializeApp({
   storageBucket: 'my-doctor-bwa-01.appspot.com',
   messagingSenderId: '84971546188',
   appId: '1:84971546188:web:986a132be32610468d36e9',
+  databaseURL:
+    'https://my-doctor-bwa-01-default-rtdb.asia-southeast1.firebasedatabase.app/',
 });
 
 const Fire = firebase;

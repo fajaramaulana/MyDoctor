@@ -50,16 +50,24 @@ const Register = ({navigation}) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const onContinue = data => {
-    console.log(data);
+  const onContinue = form => {
+    console.log(form);
     setLoading(true);
     Fire.auth()
-      .createUserWithEmailAndPassword(data.email, data.password)
+      .createUserWithEmailAndPassword(form.email, form.password)
       .then(success => {
         setLoading(false);
         reset('', {
           keepValues: false,
         });
+        const data = {
+          fullName: form.fullName,
+          profession: form.profession,
+          email: form.email,
+        };
+        Fire.database()
+          .ref('users/' + success.user.uid + '/')
+          .set(data);
         console.log('register success', success);
       })
       .catch(error => {

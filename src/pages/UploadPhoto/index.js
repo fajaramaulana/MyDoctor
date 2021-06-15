@@ -1,26 +1,52 @@
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {IconAddPhoto, ILNullPhoto} from '../../assets';
+import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
 import {Button, Gap, Header, Link} from '../../components';
 import {colors, fonts} from '../../utils';
+import {showMessage} from 'react-native-flash-message';
 
 const UploadPhoto = ({navigation}) => {
+  const [hasPhoto, setHasPhoto] = useState(false);
+  const [photo, setPhoto] = useState(ILNullPhoto);
+  const getImage = () => {
+    launchImageLibrary(
+      {quality: 0.5, maxWidth: 200, maxHeight: 200, includeBase64: true},
+      response => {
+        console.log('response:', response);
+        if (response.didCancel || response.error) {
+          showMessage({
+            message: 'Yah kamu ga jadi pilih foto ya?',
+            type: 'default',
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+        } else {
+          const sourcePhoto = {uri: response.assets[0].uri};
+          setPhoto(sourcePhoto);
+          setHasPhoto(true);
+        }
+      },
+    );
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <View style={styles.avatarWrapper}>
-            <Image source={ILNullPhoto} style={styles.avatar} />
-            <IconAddPhoto style={styles.addPhoto} />
-          </View>
+          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
+            <Image source={photo} style={styles.avatar} />
+            {hasPhoto && <IconRemovePhoto style={styles.addPhoto} />}
+            {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
+          </TouchableOpacity>
           <Gap height={26} />
           <Text style={styles.name}>Fajar Agus Maulana</Text>
           <Gap height={4} />
           <Text style={styles.profession}>React Native Developer</Text>
         </View>
         <View>
-          <Button title="Upload and Continue" />
+          <Button disable={!hasPhoto} title="Upload and Continue" />
           <Gap height={30} />
           <Link
             title="Skip for this"
@@ -55,6 +81,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 110,
     height: 110,
+    borderRadius: 110 / 2,
   },
   avatarWrapper: {
     height: 130,
