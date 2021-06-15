@@ -5,14 +5,13 @@ import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
 import {Button, Gap, Header, Link} from '../../components';
 import {colors, fonts} from '../../utils';
 import {showMessage} from 'react-native-flash-message';
+import {Fire} from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
-  const {fullName, profession, email} = route.params;
-  console.log('fullName', fullName);
-  console.log('profession', profession);
-  console.log('email', email);
+  const {fullName, profession, uid} = route.params;
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
+  const [photoForDB, setPhotoForDB] = useState('');
   const getImage = () => {
     launchImageLibrary(
       {quality: 0.5, maxWidth: 200, maxHeight: 200, includeBase64: true},
@@ -26,12 +25,24 @@ const UploadPhoto = ({navigation, route}) => {
             color: colors.white,
           });
         } else {
+          console.log('response getImage', response);
+          setPhotoForDB(
+            `data:${response.assets[0].type};base64, ${response.assets[0].base64} `,
+          );
           const sourcePhoto = {uri: response.assets[0].uri};
           setPhoto(sourcePhoto);
           setHasPhoto(true);
         }
       },
     );
+  };
+
+  const uploadAndContinue = () => {
+    Fire.database()
+      .ref('users/' + uid + '/')
+      .update({photo: photoForDB});
+
+    navigation.replace('MainApp');
   };
 
   return (
@@ -50,7 +61,11 @@ const UploadPhoto = ({navigation, route}) => {
           <Text style={styles.profession}>{profession}</Text>
         </View>
         <View>
-          <Button disable={!hasPhoto} title="Upload and Continue" />
+          <Button
+            disable={!hasPhoto}
+            title="Upload and Continue"
+            onPress={uploadAndContinue}
+          />
           <Gap height={30} />
           <Link
             title="Skip for this"
