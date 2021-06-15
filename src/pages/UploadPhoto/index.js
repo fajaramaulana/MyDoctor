@@ -6,7 +6,11 @@ import {Button, Gap, Header, Link} from '../../components';
 import {colors, fonts} from '../../utils';
 import {showMessage} from 'react-native-flash-message';
 
-const UploadPhoto = ({navigation}) => {
+const UploadPhoto = ({navigation, route}) => {
+  const {fullName, profession, email} = route.params;
+  console.log('fullName', fullName);
+  console.log('profession', profession);
+  console.log('email', email);
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
   const getImage = () => {
@@ -41,9 +45,9 @@ const UploadPhoto = ({navigation}) => {
             {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
           </TouchableOpacity>
           <Gap height={26} />
-          <Text style={styles.name}>Fajar Agus Maulana</Text>
+          <Text style={styles.name}>{fullName}</Text>
           <Gap height={4} />
-          <Text style={styles.profession}>React Native Developer</Text>
+          <Text style={styles.profession}>{profession}</Text>
         </View>
         <View>
           <Button disable={!hasPhoto} title="Upload and Continue" />

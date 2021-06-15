@@ -52,7 +52,7 @@ const Register = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   const onContinue = form => {
-    console.log(form);
+    // console.log(form);
     setLoading(true);
     Fire.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
@@ -70,8 +70,8 @@ const Register = ({navigation}) => {
           .ref('users/' + success.user.uid + '/')
           .set(data);
         storeData('user', data);
-        navigation.navigate('UploadPhoto');
-        console.log('register success', success);
+        navigation.navigate('UploadPhoto', data);
+        // console.log('register success', success);
       })
       .catch(error => {
         const errorMessage = error.message;
