@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Button, Gap, Header, Input, Loading} from '../../components';
-import {colors} from '../../utils';
+import {colors, getData, storeData} from '../../utils';
 import {Fire} from '../../config';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -13,7 +13,8 @@ const validationSchema = yup.object({
   fullName: yup
     .string()
     .required('Required!')
-    .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field '),
+    .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field ')
+    .min(5, 'Too short, minimum 5 character'),
   profession: yup
     .string()
     .required('Required!')
@@ -68,6 +69,8 @@ const Register = ({navigation}) => {
         Fire.database()
           .ref('users/' + success.user.uid + '/')
           .set(data);
+        storeData('user', data);
+        navigation.navigate('UploadPhoto');
         console.log('register success', success);
       })
       .catch(error => {
